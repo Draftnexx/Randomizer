@@ -220,70 +220,102 @@ function App() {
   const isInputLocked = state === "COLLECTING" || state === "SPINNING";
   const canStart = state === "IDLE" && options.length >= 2;
 
-  return (
-    <div className={`app state-${state.toLowerCase()}`}>
-      <header className="header">
-        <h1>Chaos Portal Randomizer</h1>
-        <p>Du erzeugst Chaos – das Multiversum wählt.</p>
-      </header>
+  const phaseClass = `phase-${state.toLowerCase()}`;
+  const intensityMap: Record<MachineState, number> = {
+    IDLE: 0.08,
+    COLLECTING: 0.55,
+    SPINNING: 1,
+    FINAL: 0.12,
+  };
+  const intensity = intensityMap[state];
 
-      <section className="controls">
-        <label htmlFor="options">Optionen</label>
-        <textarea
-          id="options"
-          value={optionsText}
-          onChange={(event) => setOptionsText(event.target.value)}
-          placeholder="Optionen eingeben"
-          disabled={isInputLocked}
-          rows={4}
-        />
-        <div className="controls-footer">
-          <span>Mindestens 2 Optionen erforderlich.</span>
-          {state === "IDLE" && (
-            <button onClick={handleStart} disabled={!canStart}>
-              Chaos starten
-            </button>
-          )}
-          {state === "COLLECTING" && <span className="status">Entropie sammelt.</span>}
-          {state === "SPINNING" && (
-            <button onClick={handleCollapse} disabled={isCollapsing}>
-              Realität kollabieren
-            </button>
-          )}
-          {state === "FINAL" && (
-            <div className="final-actions">
-              <button onClick={handleCopy} disabled={!finalOption}>
-                Ergebnis kopieren
+  const containerStyle = {
+    "--seed": seed ?? 0,
+    "--intensity": intensity,
+  } as React.CSSProperties;
+
+  const buildUniverseStyle = (id: number, size: number) => {
+    const base = seed ?? 0;
+    const hash = ((base ^ (id * 9301 + 49297)) * 233280) >>> 0;
+    const rot = (hash % 60) / 100 - 0.3;
+    const shift = ((hash >> 6) % 20) / 10 - 1;
+    const shiftY = ((hash >> 11) % 20) / 10 - 1;
+    const scale = 0.985 + ((hash >> 16) % 50) / 2000;
+
+    return {
+      transform: `translate(${shift}px, ${shiftY}px) rotate(${rot}deg) scale(${size * scale})`,
+    };
+  };
+
+  return (
+    <div
+      className={`app-shell ${phaseClass} ${isCollapsing ? "is-collapsing" : ""}`}
+      style={containerStyle}
+    >
+      <div className={`app state-${state.toLowerCase()}`}>
+        <header className="header">
+          <h1>Chaos Portal Randomizer</h1>
+          <p>Du erzeugst Chaos – das Multiversum wählt.</p>
+        </header>
+
+        <section className="controls">
+          <label htmlFor="options">Optionen</label>
+          <textarea
+            id="options"
+            value={optionsText}
+            onChange={(event) => setOptionsText(event.target.value)}
+            placeholder="Optionen eingeben"
+            disabled={isInputLocked}
+            rows={4}
+          />
+          <div className="controls-footer">
+            <span>Mindestens 2 Optionen erforderlich.</span>
+            {state === "IDLE" && (
+              <button onClick={handleStart} disabled={!canStart}>
+                Chaos starten
               </button>
-              <button onClick={handleRestart}>Nochmal</button>
+            )}
+            {state === "COLLECTING" && <span className="status">Entropie sammelt.</span>}
+            {state === "SPINNING" && (
+              <button onClick={handleCollapse} disabled={isCollapsing}>
+                Realität kollabieren
+              </button>
+            )}
+            {state === "FINAL" && (
+              <div className="final-actions">
+                <button onClick={handleCopy} disabled={!finalOption}>
+                  Ergebnis kopieren
+                </button>
+                <button onClick={handleRestart}>Nochmal</button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="multiverse" aria-label="Multiversum">
+          {displayUniverses.map((universe) => (
+            <div
+              key={universe.id}
+              className={`universe ${universe.frozen ? "frozen" : ""}`}
+              style={{
+                ...buildUniverseStyle(universe.id, universe.size),
+                transitionDelay: `${universe.delay}ms`,
+              }}
+            >
+              <span>{universe.word}</span>
+            </div>
+          ))}
+        </section>
+
+        <section className="result" aria-live="polite">
+          {state === "FINAL" && (
+            <div className="result-card">
+              <div className="result-word">{finalOption}</div>
+              <div className="result-lore">{finalLore}</div>
             </div>
           )}
-        </div>
-      </section>
-
-      <section className="multiverse" aria-label="Multiversum">
-        {displayUniverses.map((universe) => (
-          <div
-            key={universe.id}
-            className={`universe ${universe.frozen ? "frozen" : ""}`}
-            style={{
-              transform: `scale(${universe.size})`,
-              transitionDelay: `${universe.delay}ms`,
-            }}
-          >
-            <span>{universe.word}</span>
-          </div>
-        ))}
-      </section>
-
-      <section className="result" aria-live="polite">
-        {state === "FINAL" && (
-          <div className="result-card">
-            <div className="result-word">{finalOption}</div>
-            <div className="result-lore">{finalLore}</div>
-          </div>
-        )}
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
