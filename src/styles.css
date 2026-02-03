@@ -1,0 +1,227 @@
+:root {
+  color-scheme: dark;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.4;
+  font-weight: 400;
+  --bg: #0b0d12;
+  --panel: #121622;
+  --panel-border: #242a3b;
+  --accent: #4de1ff;
+  --accent-2: #ff4d8b;
+  --text: #e7e9f1;
+  --muted: #8e94a8;
+  --danger: #ff8060;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #111827 0%, #0b0d12 55%, #06070b 100%);
+  color: var(--text);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 0.04em;
+}
+
+.header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.controls {
+  background: linear-gradient(135deg, rgba(18, 22, 34, 0.9), rgba(10, 12, 18, 0.95));
+  border: 1px solid var(--panel-border);
+  padding: 1.5rem;
+  border-radius: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 0 25px rgba(77, 225, 255, 0.08);
+}
+
+.controls label {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.controls textarea {
+  width: 100%;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(77, 225, 255, 0.3);
+  background: rgba(6, 7, 11, 0.9);
+  color: var(--text);
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.controls textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(77, 225, 255, 0.18);
+}
+
+.controls textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.controls-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.controls-footer button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.65rem 1.6rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: var(--accent);
+  color: #061018;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.controls-footer button:disabled {
+  cursor: not-allowed;
+  background: rgba(77, 225, 255, 0.3);
+  color: rgba(6, 16, 24, 0.6);
+  box-shadow: none;
+}
+
+.controls-footer button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(77, 225, 255, 0.25);
+}
+
+.final-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.final-actions button:last-child {
+  background: var(--accent-2);
+  color: #20040c;
+}
+
+.status {
+  color: var(--accent);
+}
+
+.multiverse {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1rem;
+}
+
+.universe {
+  background: rgba(12, 14, 22, 0.85);
+  border: 1px solid rgba(77, 225, 255, 0.25);
+  border-radius: 1rem;
+  padding: 1rem;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: opacity 0.2s ease, filter 0.2s ease, border 0.2s ease;
+}
+
+.universe span {
+  display: block;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.state-spinning .universe {
+  border-color: rgba(255, 77, 139, 0.35);
+  box-shadow: 0 0 18px rgba(255, 77, 139, 0.15);
+}
+
+.universe.frozen {
+  opacity: 0.55;
+  filter: grayscale(0.4) blur(0.2px);
+}
+
+.state-final .multiverse,
+.state-final .controls {
+  opacity: 0.45;
+}
+
+.result {
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-card {
+  padding: 1.8rem 2.4rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(77, 225, 255, 0.45);
+  background: rgba(6, 10, 18, 0.85);
+  box-shadow: 0 0 35px rgba(77, 225, 255, 0.25);
+  text-align: center;
+  width: min(520px, 100%);
+}
+
+.result-word {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+  color: var(--accent);
+}
+
+.result-lore {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+@media (max-width: 720px) {
+  .controls-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .final-actions {
+    width: 100%;
+  }
+
+  .final-actions button {
+    flex: 1;
+  }
+}
